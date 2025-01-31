@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-app
+  template:
+    metadata:
+      labels:
+        app: backend-app
+    spec:
+      containers:
+      - name: backend-appcontainer
+        image: your_docker_repo
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-app-svc
+spec:
+  type: NodePort  # Or LoadBalancer, depending on your setup
+  selector:
+    app: backend-app
+  ports:
+    - protocol: TCP
+      port: 80       # Port that the service exposes (can be different from the container port)
+      targetPort: 8080 # Port the application listens on inside the container
+      nodePort: 30008  # Port exposed on each node (between 30000 and 32767)
+
+
